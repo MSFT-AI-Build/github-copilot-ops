@@ -142,44 +142,163 @@ GitHub Copilot 의 Open Telemetry Endpoint 를 설정만 해주신다면, 바로
 
 ### GitHub Copilot OTEL 설정
 
-GitHub Copilot에서 OpenTelemetry를 활성화하면, Prompt/Response 수준의 트레이스 데이터를 외부 관측 시스템으로 전송할 수 있습니다.
+GitHub Copilot에서 OpenTelemetry를 활성화하면, Agent 세션의 Traces, Metrics, Events 데이터를 외부 관측 시스템으로 전송할 수 있습니다.
 
 OpenTelemetry 를 통해 기존에 엔터프라이즈에서 갖고있는 SIEM 으로 연동하거나, Azure Application Insights 로 전송해서 통합 대시보드를 구축하실 수도 있습니다.
 
 본 워크샵에서는 Azure Application Insights 기반의 통합 대시보드를 가이드합니다.
 
+#### 수집 데이터 유형
+
+Copilot 은 OpenTelemetry 를 통해 다음 3가지 유형의 데이터를 전송합니다:
+
+| 유형 | 설명 | 예시 |
+|------|------|------|
+| **Traces** | Agent 세션의 전체 실행 흐름을 계층적 스팬 트리로 기록 | 모델 호출 → Tool 실행 → 응답 생성 |
+| **Metrics** | 시간에 따른 수치 측정값 | 토큰 사용량, API 지연시간, 세션 수 |
+| **Events** | 특정 시점의 개별 액션 기록 | 편집 수락/거부, 사용자 피드백, 세션 시작 |
+
+> ⚠️ **보안 참고**: 기본적으로 Prompt, Response, Tool 인자 등의 콘텐츠는 수집되지 않습니다. `captureContent` 옵션을 활성화하면 전체 내용을 캡처할 수 있으나, 민감 정보(코드, 파일 내용, 사용자 프롬프트)가 포함될 수 있으므로 신뢰할 수 있는 환경에서만 활성화하시기 바랍니다.
+
+#### 연동 아키텍처
+
+GitHub Copilot 의 OTEL 데이터는 OTLP (OpenTelemetry Protocol) 를 통해 전송되며, Azure Application Insights 와 연동 시 다음과 같은 아키텍처로 구성합니다:
+
+```
+Copilot Client (VS Code / CLI)
+        │
+        │  OTLP (HTTP/gRPC)
+        ▼
+OpenTelemetry Collector
+        │
+        │  Azure Monitor Exporter
+        ▼
+Azure Application Insights
+        │
+        ▼
+Managed Grafana Dashboard
+```
+
+OTLP Collector 를 중간에 배치하여 데이터 변환, 필터링, 라우팅을 처리하고, Azure Monitor Exporter 를 통해 Application Insights 로 전달합니다.
+
+**OpenTelemetry Collector 구성 예시 (`otel-config.yaml`):**
+
+```yaml
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: "0.0.0.0:4318"
+      grpc:
+        endpoint: "0.0.0.0:4317"
+
+exporters:
+  azuremonitor:
+    connection_string: "<APPLICATION_INSIGHTS_CONNECTION_STRING>"
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [azuremonitor]
+    metrics:
+      receivers: [otlp]
+      exporters: [azuremonitor]
+```
+
 #### VS Code (GitHub Copilot Chat) 설정
 
-VS Code의 `settings.json`에 다음 설정을 추가합니다:
+VS Code의 `settings.json`에 다음 설정을 추가합니다. 설정 네임스페이스는 `github.copilot.chat.otel.*` 입니다:
 
 ```json
 {
-  "github.copilot.advanced": {
-    "debug.openTelemetryEndpoint": "https://<YOUR_APP_INSIGHTS_ENDPOINT>/v2/track",
-    "debug.openTelemetryConnectionString": "<YOUR_APPLICATION_INSIGHTS_CONNECTION_STRING>"
-  }
+  "github.copilot.chat.otel.enabled": true,
+  "github.copilot.chat.otel.exporterType": "otlp-http",
+  "github.copilot.chat.otel.otlpEndpoint": "http://<YOUR_OTEL_COLLECTOR>:4318",
+  "github.copilot.chat.otel.captureContent": false
 }
 ```
 
-#### GitHub Copilot CLI (Copilot in the CLI) 설정
+**주요 VS Code 설정 항목:**
+
+| 설정 | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| `otel.enabled` | boolean | `false` | OTel 데이터 전송 활성화 |
+| `otel.exporterType` | string | `"otlp-http"` | 전송 프로토콜 (`otlp-http`, `otlp-grpc`, `console`, `file`) |
+| `otel.otlpEndpoint` | string | `"http://localhost:4318"` | OTLP Collector 엔드포인트 |
+| `otel.captureContent` | boolean | `false` | Prompt/Response 전체 내용 캡처 여부 |
+| `otel.maxAttributeSizeChars` | integer | `0` | 콘텐츠 속성 최대 문자 수 (`0` = 무제한) |
+
+#### GitHub Copilot CLI 설정
 
 환경 변수를 통해 OpenTelemetry Endpoint를 설정합니다:
 
 ```bash
-export OTEL_EXPORTER_OTLP_ENDPOINT="https://<YOUR_OTLP_ENDPOINT>"
+# 기본 OTLP 설정
+export OTEL_EXPORTER_OTLP_ENDPOINT="http://<YOUR_OTEL_COLLECTOR>:4318"
 export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer <YOUR_TOKEN>"
+
+# Copilot 전용 환경 변수 (선택)
+export COPILOT_OTEL_ENABLED=true
+export COPILOT_OTEL_CAPTURE_CONTENT=false
 ```
 
-#### 설정 시 참고 사항
+**주요 환경 변수:**
 
-| 항목 | 설명 |
-|------|------|
-| **Connection String** | Azure Application Insights 리소스 생성 후 포털에서 확인 가능 |
-| **프로토콜** | OTLP (OpenTelemetry Protocol) over HTTPS |
-| **수집 데이터** | Prompt 내용, Response 토큰 수, 지연시간(Latency), 모델 정보 등 |
-| **보안 고려** | Connection String은 환경 변수 또는 시크릿 관리 도구를 통해 관리 권장 |
+| 환경 변수 | 기본값 | 설명 |
+|-----------|--------|------|
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | - | 표준 OTLP 엔드포인트 URL |
+| `OTEL_EXPORTER_OTLP_HEADERS` | - | 인증 헤더 (예: `Authorization=Bearer token`) |
+| `OTEL_EXPORTER_OTLP_PROTOCOL` | `http/protobuf` | OTLP 프로토콜 (`grpc` 또는 `http`) |
+| `COPILOT_OTEL_ENABLED` | `false` | Copilot OTel 활성화 |
+| `COPILOT_OTEL_ENDPOINT` | - | Copilot 전용 엔드포인트 (표준 변수보다 우선) |
+| `COPILOT_OTEL_CAPTURE_CONTENT` | `false` | Prompt/Response 콘텐츠 캡처 |
+| `OTEL_SERVICE_NAME` | `copilot-chat` | 서비스 이름 |
+| `OTEL_RESOURCE_ATTRIBUTES` | - | 추가 리소스 속성 (`key=val,key2=val2`) |
 
-> **💡 Tip**: 설정 후 VS Code를 재시작하면 트레이스 데이터가 Application Insights로 전송되기 시작합니다. 데이터가 대시보드에 반영되기까지 수 분이 소요될 수 있습니다.
+#### Enterprise Managed Settings (중앙 관리)
+
+Enterprise 환경에서는 `managed-settings.json` 의 `telemetry` 블록을 통해 조직 전체의 OTel 설정을 중앙에서 관리할 수 있습니다. 이 설정은 개별 사용자의 환경 변수나 VS Code 설정보다 우선 적용됩니다.
+
+```json
+{
+  "telemetry": {
+    "enabled": true,
+    "endpoint": "https://otel-collector.example.com",
+    "protocol": "http/protobuf",
+    "captureContent": false,
+    "lockCaptureContent": true,
+    "serviceName": "copilot",
+    "resourceAttributes": {
+      "deployment.environment": "production"
+    },
+    "headers": {
+      "Authorization": "Bearer <YOUR_TOKEN>"
+    }
+  }
+}
+```
+
+**배포 방법:**
+- **MDM**: Windows Registry, macOS Managed Preferences 를 통한 배포
+- **파일 기반**: `managed-settings.json` 파일 직접 배포
+- **서버 기반**: Organization 의 `.github-private` 리포지토리를 통한 배포
+
+> **💡 Tip**: `lockCaptureContent: true` 로 설정하면 사용자가 `captureContent` 를 임의로 변경할 수 없어, 보안 정책을 일관되게 유지할 수 있습니다.
+
+#### 설정 우선순위
+
+여러 설정 소스가 존재할 경우, 다음 순서로 우선순위가 적용됩니다:
+
+```
+1. MDM Managed Settings (최우선)
+2. Server Managed Settings
+3. File-based Managed Settings
+4. Environment Variables
+5. VS Code User Settings (최하위)
+```
+
+> **💡 Tip**: 설정 후 VS Code를 재시작하면 트레이스 데이터가 OTLP Collector 를 통해 Application Insights로 전송되기 시작합니다. 데이터가 대시보드에 반영되기까지 수 분이 소요될 수 있습니다.
 
 ### Trace 확인
 
@@ -189,7 +308,7 @@ Azure Application Insights 로 OpenTelemetry 로그를 전송하게 구성한다
 
 ![GHCP_ApplicationInsights_Trace](../images/GHCP_ApplicationInsights_Trace.png)
 
-또한 위와 같이 보안 규제 만족을 위해 Prompt 및 Response 에 대한 모니터링도 구성하실 수 있습니다. 
+또한 위와 같이 보안 규제 만족을 위해 Prompt 및 Response 에 대한 모니터링도 구성하실 수 있습니다. 참고로 Prompt 및 Reponse 의 수집을 위해서는 OpenTelemetry 전송 시 capture_content 파라미터를 true 로 보내주셔야합니다.
 
 Application Insights 에 이를 위한 분석 패널을 만들어서 이상 탐지 시스템 등을 만드는데 활용해보실 수도 있습니다.
 
@@ -350,9 +469,11 @@ Enterprise → Settings → Audit log → Log streaming → Set up stream
 ### 4.2 Azure Application Insights 통합 대시보드
 
 - [ ] Azure Application Insights 리소스 생성 및 Connection String 확보
-- [ ] GitHub Copilot OpenTelemetry Endpoint 설정 (VS Code / CLI)
+- [ ] OpenTelemetry Collector 구성 및 Azure Monitor Exporter 설정
+- [ ] GitHub Copilot OTel 설정 (VS Code `github.copilot.chat.otel.*` / CLI 환경 변수)
+- [ ] Enterprise Managed Settings 를 통한 중앙 OTel 설정 검토 (선택)
 - [ ] Managed Grafana 빌트인 대시보드 확인
-- [ ] Trace 데이터 수집 확인 (Prompt/Response 모니터링)
+- [ ] Trace 데이터 수집 확인 (Traces, Metrics, Events)
 
 ### 4.3 Audit Log 관리
 
@@ -368,6 +489,10 @@ Enterprise → Settings → Audit log → Log streaming → Set up stream
 - [GitHub Enterprise Audit Log](https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise)
 - [Audit Log Streaming](https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/streaming-the-audit-log-for-your-enterprise)
 - [Copilot Metrics API](https://docs.github.com/en/rest/copilot/copilot-metrics)
+- [OpenTelemetry for Copilot Agent Monitoring](https://docs.github.com/en/copilot/concepts/agents/opentelemetry)
+- [VS Code - Monitor Agent Usage with OpenTelemetry](https://code.visualstudio.com/docs/agents/guides/monitoring-agents)
+- [Enterprise Managed Settings Reference](https://docs.github.com/en/copilot/reference/enterprise-administrators/enterprise-managed-settings)
 - [Azure Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview)
+- [Azure Managed Grafana - Monitor AI Coding Agents](https://learn.microsoft.com/en-us/azure/managed-grafana/grafana-opentelemetry-app-insights)
 - [Azure Workbooks](https://learn.microsoft.com/en-us/azure/azure-monitor/visualize/workbooks-overview)
 - [KQL Reference](https://learn.microsoft.com/en-us/kusto/query/)

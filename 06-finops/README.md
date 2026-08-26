@@ -35,7 +35,7 @@ GitHub Copilot의 비용은 크게 **고정비(License Seat)** 와 **변동비(A
 |------|------|
 | **Enterprise 중복 제거** | 동일 사용자가 Enterprise 내 여러 Org에서 시트를 받아도 **1회만 과금** |
 | **상위 플랜 우선** | Business + Enterprise 시트를 동시에 받으면 Enterprise 요금만 부과 |
-| **과금 주기 말 해제** | 시트 제거 시 즉시 접근 차단되나, 과금은 현재 청구 주기 종료까지 유지 |
+| **과금 주기 말 해제** | 시트 할당을 해제하면 사용자는 현재 청구 주기 종료 시 접근 권한을 잃음 |
 | **개인 플랜 Override** | 조직 시트 할당 시 기존 개인 구독은 자동 취소 (비례 환불) |
 
 #### Seat 할당 권한 체계
@@ -61,14 +61,14 @@ Billing Manager
 
 ### 6.1.2 AI Credits와 Usage-Based Billing
 
-#### AI Credits이란?
+#### AI Credit이란?
 
 **AI Credit = GitHub Copilot의 프리미엄 기능 사용을 측정하는 과금 단위**
 
 - **1 AI Credit = $0.01 USD**
-- 토큰(Token) 소비량을 기반으로 크레딧이 차감됨
-- 사용 모델(LLM)에 따라 동일 작업이라도 크레딧 소비량이 다름
-- 매월 포함된 크레딧 한도를 초과하면 추가 과금 발생
+- 입력·출력·캐시 토큰 사용량과 모델별 단가를 기준으로 Credit이 계산됨
+- 같은 작업도 선택한 모델과 컨텍스트 크기에 따라 Credit 사용량이 달라질 수 있음
+- 포함된 Credit Pool을 초과한 사용은 관리자가 추가 사용을 허용한 경우에만 과금됨
 
 
 > **✅ Note**: AI 특성상, Credit을 토큰 사용량으로 직접 환산하기는 어렵습니다. 토큰 사용량에 따라 비용이 발생하고, 그 비용만큼 AI Credit이 측정된 뒤 할인이 적용되는 구조로 이해하면 됩니다.
@@ -91,7 +91,7 @@ Billing Manager
 
 AI Credits은 **사용한 LLM 모델의 토큰 단가**에 따라 결정됩니다. 같은 질문이라도 선택한 모델에 따라 비용이 크게 달라집니다.
 
-해당 내용은 모델 가격 정책 변경에 영향을 받기 떄문에 홈페이지에서 확인을 권고드립니다.
+모델별 단가는 변경될 수 있으므로 아래 공식 문서에서 최신 정보를 확인하세요.
 
 [GitHub Copilot 모델 가격표](https://docs.github.com/en/enterprise-cloud@latest/copilot/reference/copilot-billing/models-and-pricing)
 
@@ -103,7 +103,12 @@ AI Credits은 **사용한 LLM 모델의 토큰 단가**에 따라 결정됩니�
 
 ![GHCP_UBB](../images/GHCP_UBB.png)
 
-GitHub Copilot에는 License Seat(고정 비용)과 사용량에 비례하는 AI Credit(변동 비용)이 존재합니다. License Seat 비용은 AI Credit Pool에서 차감되므로, 실제 청구 금액은 AI Credit 사용량을 기준으로 산정됩니다.
+GitHub Copilot 비용은 다음 두 항목으로 별도 산정됩니다.
+
+1. **License Seat 비용**: 할당된 시트마다 매월 부과되는 고정 비용
+2. **추가 AI Credit 비용**: 시트가 제공하는 공유 Credit Pool을 모두 사용한 뒤, 관리자가 추가 사용을 허용한 경우 발생하는 변동 비용
+
+각 시트는 매월 일정량의 AI Credit을 공유 Pool에 추가합니다.
 
 #### Pooled Credits (크레딧 풀링)
 
@@ -143,7 +148,7 @@ AI Usage 탭에서 모델별 사용량에 대한 상세 뷰(Detailed View)를 �
 
 GitHub Copilot 비용을 관리하는 가장 효과적인 방법 중 하나는 **Cost Center**를 활용하는 것입니다.
 
-Cost Center를 활용하면 Organization, Repository, Team, User 단위로 비용 관리를 세분화할 수 있고, 서로 다른 Azure Subscription에서 비용을 지불하도록 분리할 수도 있습니다.
+Cost Center에는 Organization, Repository, User, Enterprise Team을 연결할 수 있습니다. Azure를 통해 요금을 결제하는 Enterprise라면 Cost Center별로 서로 다른 Azure Subscription을 연결할 수도 있습니다.
 
 ![GHCP_FinOps4](../images/GHCP_FinOps_4.png)
 
@@ -153,9 +158,7 @@ AI Credit Cap을 설정하면, Cost Center 단위로 AI Credit 사용량 한도�
 
 ![GHCP_FinOps5](../images/GHCP_FinOps_5.png)
 
-Budget을 설정하면 Enterprise / Cost Center / User 수준별로 예산을 관리할 수 있습니다.
-
-예산 초과 시 해당 범위의 사용이 제한되므로, 보다 세밀한 비용 통제가 가능합니다.
+Budget을 설정하면 Enterprise, Organization, Cost Center, User 수준에서 추가 사용 비용을 관리할 수 있습니다. Enterprise나 Cost Center Budget은 **Stop usage when budget limit is reached**를 선택한 경우에만 한도 도달 후 추가 사용이 차단됩니다. 이 옵션을 선택하지 않으면 알림만 전송되고 사용은 계속됩니다. User Level AI Credit Budget은 항상 hard stop으로 동작합니다.
 
 | 구분 | Enterprise Level Budget | Cost Center Budget | User Level Budget |
 |------|------------------------|--------------------|-------------------|
@@ -163,12 +166,14 @@ Budget을 설정하면 Enterprise / Cost Center / User 수준별로 예산을 �
 | **설정 주체** | Enterprise Owner / Billing Manager | Enterprise Owner / Billing Manager | Enterprise Owner / Billing Manager |
 | **제어 단위** | Enterprise 내 모든 Org의 총 사용량 | 특정 Cost Center에 속한 리소스의 사용량 | 특정 사용자 1인의 사용량 |
 | **주요 목적** | 전사 비용 상한선 관리 | 부서/팀/프로젝트별 비용 분배 및 과점유 방지 | 헤비 유저 제어 및 공정한 사용량 분배 |
-| **Budget 초과 시** | Enterprise 전체 AI Credit 사용 차단 | 해당 Cost Center만 사용 차단 | 해당 사용자만 사용 차단 |
+| **Budget 초과 시** | Hard stop 설정 시 Enterprise 추가 사용 차단 | Hard stop 설정 시 해당 Cost Center 추가 사용 차단 | 해당 사용자 사용 차단 |
 | **적합한 시나리오** | 전사 월간/연간 예산 총액 관리 | 사업부·팀별 예산 할당 및 독립 정산 | Coding Agent 등 고사용량 사용자 관리 |
 | **세분화 수준** | 🔴 낮음 (전체 단위) | 🟡 중간 (그룹 단위) | 💚 높음 (개인 단위) |
 | **권장 조합** | 전사 상한선으로 설정 | Cost Center별 비율 배분 | 헤비 유저 대상 선별 적용 |
 
 Coding Agent의 경우 소수의 헤비 유저가 대부분의 토큰을 소비하는 특성이 있어, 세밀한 비용 제어가 사용량 최적화의 핵심 요소가 됩니다.
+
+> **주의**: Cost Center Budget은 공유 Credit Pool 소진 이후의 추가 과금을 제한합니다. Pool 소진 전 Cost Center의 포함 사용량을 제한하려면 **Included usage control**을 별도로 구성해야 합니다.
 
 **권장 도입 순서:**
 
@@ -217,6 +222,9 @@ Coding Agent의 경우 소수의 헤비 유저가 대부분의 토큰을 소비�
 ## 참고 자료
 
 - [GitHub Copilot 가격 정책](https://docs.github.com/en/copilot/about-github-copilot/subscription-plans-for-github-copilot)
+- [Organization 및 Enterprise의 Usage-Based Billing](https://docs.github.com/en/copilot/concepts/billing/usage-based-billing-for-organizations-and-enterprises)
+- [Budget 설정](https://docs.github.com/en/billing/how-tos/set-up-budgets)
+- [Cost Center 개요](https://docs.github.com/en/billing/concepts/cost-centers)
 - [Copilot Billing API](https://docs.github.com/en/rest/copilot/copilot-billing)
 - [Copilot 시트 관리 API](https://docs.github.com/en/rest/copilot/copilot-user-management)
 - [GitHub Enterprise 비용 관리](https://docs.github.com/en/enterprise-cloud@latest/billing/managing-your-github-billing-settings)
