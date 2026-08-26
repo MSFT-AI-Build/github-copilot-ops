@@ -4,6 +4,17 @@ GitHub Copilot 도입 시 보안팀·컴플라이언스 담당자가 가장 자�
 
 데이터 처리 및 프라이버시, 보안 아키텍처, 지적 재산권, 컴플라이언스, 운영 보안까지 — 도입 검토 단계에서 필요한 **보안 대응 체크리스트**를 제공합니다.
 
+## 📑 목차
+
+- [5.1 데이터 처리 및 프라이버시](#51-데이터-처리-및-프라이버시)
+- [5.2 보안 아키텍처](#52-보안-아키텍처)
+- [5.3 지적 재산권 (IP) 및 라이선스](#53-지적-재산권-ip-및-라이선스)
+- [5.4 컴플라이언스](#54-컴플라이언스)
+- [5.5 운영 보안](#55-운영-보안)
+- [5.6 AI 에이전트 보안](#56-ai-에이전트-보안)
+- [5.7 보안 도입 체크리스트](#57-보안-도입-체크리스트)
+- [참고 자료](#참고-자료)
+
 ---
 
 ## 5.1 데이터 처리 및 프라이버시
@@ -380,3 +391,7 @@ GitHub Copilot 의 경우 보안 사고 방지를 위한 다양한 계층을 제
 - [Building Cloud-Agent Guardrails](https://docs.github.com/en/copilot/tutorials/cloud-agent/build-guardrails)
 - [Copilot Usage Limits](https://docs.github.com/en/copilot/concepts/usage-limits)
 - [Managing Copilot Policies](https://docs.github.com/en/copilot/concepts/policies)
+
+---
+
+[⬅️ 이전: Observability](../04-observability/) | [🏠 메인](../README.md) | [➡️ 다음: FinOps](../06-finops/)

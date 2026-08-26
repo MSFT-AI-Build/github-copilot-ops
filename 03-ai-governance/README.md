@@ -4,6 +4,16 @@
 
 이를 통해 조직의 보안 체계 안에서 효율적인 운영을 할 수 있는 정책을 정의할 수 있습니다.
 
+## 📑 목차
+
+- [3.1 Copilot 정책 계층 구조](#31-copilot-정책-계층-구조)
+- [3.2 주요 Copilot 정책 항목](#32-주요-copilot-정책-항목)
+- [3.3 거버넌스 프레임워크 설계](#33-거버넌스-프레임워크-설계)
+- [3.4 정책 구성 실습](#34-정책-구성-실습)
+- [3.5 GitHub Copilot 정책 구성 Best Practice](#35-github-copilot-정책-구성-best-practice)
+- [3.6 체크리스트](#36-체크리스트)
+- [참고 자료](#참고-자료)
+
 ---
 
 ## 3.1 Copilot 정책 계층 구조
@@ -249,3 +259,7 @@ Week 9+:   지속적 최적화 → 사용량 분석 기반 정책 개선
 - [IP Indemnity](https://docs.github.com/en/copilot/responsible-use-of-github-copilot-features/github-copilot-ip-indemnity)
 - [Audit Log 이벤트](https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/audit-log-events-for-your-enterprise)
 - [Audit Log 스트리밍](https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/streaming-the-audit-log-for-your-enterprise)
+
+---
+
+[⬅️ 이전: GitHub Copilot 시작하기](../02-copilot-getting-started/) | [🏠 메인](../README.md) | [➡️ 다음: Observability](../04-observability/)

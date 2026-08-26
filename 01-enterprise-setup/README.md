@@ -1,5 +1,17 @@
 # 섹션 1: GitHub Enterprise 구성
 
+## 📑 목차
+
+- [GitHub Enterprise 소개](#github-enterprise-소개)
+- [1.1 GitHub Enterprise 계층 구조 소개](#11-github-enterprise-계층-구조-소개)
+- [1.2 Enterprise Account 설정](#12-enterprise-account-설정)
+- [1.3 SSO 및 SCIM 프로비저닝](#13-sso-및-scim-프로비저닝)
+- [1.4 Enterprise 정책 관리](#14-enterprise-정책-관리)
+- [1.5 Audit Log 설정](#15-audit-log-설정)
+- [1.6 체크리스트](#16-체크리스트)
+- [참고 자료](#참고-자료)
+
+---
 
 ## GitHub Enterprise 소개
 
@@ -255,3 +267,7 @@ curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
 - [SCIM 프로비저닝 가이드](https://docs.github.com/en/enterprise-cloud@latest/admin/identity-and-access-management/provisioning-user-accounts-for-enterprise-managed-users)
 - [Enterprise 정책 관리](https://docs.github.com/en/enterprise-cloud@latest/admin/policies)
 - [Audit Log 스트리밍](https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/streaming-the-audit-log-for-your-enterprise)
+
+---
+
+[🏠 메인](../README.md) | [➡️ 다음: GitHub Copilot 시작하기](../02-copilot-getting-started/)

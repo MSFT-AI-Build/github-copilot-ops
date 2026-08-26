@@ -4,6 +4,13 @@
 
 단순한 비용 절약 가이드가 아니라, 비용 구조를 파악한 뒤 조직별·사용자별로 체계적인 비용 관리 방안을 제시하는 것이 목표입니다.
 
+## 📑 목차
+
+- [6.1 Copilot 비용 구조 이해](#61-copilot-비용-구조-이해)
+- [6.2 GitHub Copilot 비용 관리하기](#62-github-copilot-비용-관리하기)
+- [6.3 FinOps 체크리스트](#63-finops-체크리스트)
+- [참고 자료](#참고-자료)
+
 ---
 
 ## 6.1 Copilot 비용 구조 이해
@@ -230,3 +237,7 @@ Coding Agent의 경우 소수의 헤비 유저가 대부분의 토큰을 소비�
 - [GitHub Enterprise 비용 관리](https://docs.github.com/en/enterprise-cloud@latest/billing/managing-your-github-billing-settings)
 - [GitHub Copilot 사용량 리포트](https://docs.github.com/en/enterprise-cloud@latest/copilot/managing-copilot/managing-github-copilot-in-your-organization/reviewing-usage-data-for-github-copilot-in-your-organization)
 - [FinOps Foundation](https://www.finops.org/)
+
+---
+
+[⬅️ 이전: Security FAQ](../05-security-faq/) | [🏠 메인](../README.md)

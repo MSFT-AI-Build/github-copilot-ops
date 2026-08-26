@@ -1,5 +1,14 @@
 # 섹션 2: GitHub Copilot 시작 (라이센스 할당 및 GitHub Copilot App 기반 가이드)
 
+## 📑 목차
+
+- [2.1 GitHub Copilot 라이센스 모델](#21-github-copilot-라이센스-모델)
+- [2.2 Copilot 라이센스 할당](#22-copilot-라이센스-할당)
+- [2.3 GitHub Copilot App](#23-github-copilot-app)
+- [2.4 체크리스트](#24-체크리스트)
+- [참고 자료](#참고-자료)
+
+---
 
 GitHub Copilot 은 라이센스 및 사용량에 따른 비용 체계를 제공합니다.
 
@@ -180,3 +189,7 @@ AI Chatbot 형태로 구현해보실 수도 있으며, 구성하신 GitHub Enter
 - [VS Code에서 Copilot 사용하기](https://code.visualstudio.com/docs/copilot/overview)
 - [프롬프트 엔지니어링 가이드](https://docs.github.com/en/copilot/using-github-copilot/prompt-engineering-for-github-copilot)
 - [Custom Instructions](https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot)
+
+---
+
+[⬅️ 이전: GitHub Enterprise 구성](../01-enterprise-setup/) | [🏠 메인](../README.md) | [➡️ 다음: AI 거버넌스](../03-ai-governance/)

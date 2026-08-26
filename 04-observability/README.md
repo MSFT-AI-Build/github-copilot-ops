@@ -4,6 +4,14 @@
 
 이번 섹션에서는 구성된 GitHub Copilot 사용에 대해 지속적인 가시성을 가질 수 있는 방안을 알아봅니다.
 
+## 📑 목차
+
+- [4.1 GitHub Enterprise – Insights](#41-github-enterprise--insights)
+- [4.2 Azure Application Insights 통합 대시보드 구성](#42-azure-application-insights-통합-대시보드-구성)
+- [4.3 Audit Log 관리](#43-audit-log-관리)
+- [4.4 체크리스트](#44-체크리스트)
+- [참고 자료](#참고-자료)
+
 ---
 
 ## 4.1 GitHub Enterprise – Insights
@@ -496,3 +504,7 @@ Enterprise → Settings → Audit log → Log streaming → Set up stream
 - [Azure Managed Grafana - Monitor AI Coding Agents](https://learn.microsoft.com/en-us/azure/managed-grafana/grafana-opentelemetry-app-insights)
 - [Azure Workbooks](https://learn.microsoft.com/en-us/azure/azure-monitor/visualize/workbooks-overview)
 - [KQL Reference](https://learn.microsoft.com/en-us/kusto/query/)
+
+---
+
+[⬅️ 이전: AI 거버넌스](../03-ai-governance/) | [🏠 메인](../README.md) | [➡️ 다음: Security FAQ](../05-security-faq/)
