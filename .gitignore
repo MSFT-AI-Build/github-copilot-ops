@@ -1,0 +1,46 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node.js (markdownlint, textlint 등 린트 도구)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Python (MkDocs, Sphinx 등 문서 빌드 도구)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+site/
+
+# 문서 빌드 산출물
+_site/
+_build/
+public/
+dist/
+out/
+
+# PDF / Office 변환 파일
+*.pdf
+*.docx
+*.pptx
+
+# 환경 설정 및 시크릿
+.env
+.env.*
+
+# 임시 파일
+*.tmp
+*.bak
+*.log
