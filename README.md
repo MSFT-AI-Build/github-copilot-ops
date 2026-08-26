@@ -93,10 +93,6 @@ GitHub Copilot의 **라이선스 비용을 체계적으로 관리**하기 위한
 
 ---
 
-## 라이센스
-
-이 워크샵 자료는 [MIT License](LICENSE)로 제공됩니다.
-
 ## 참고 자료
 
 - [GitHub Copilot 공식 문서](https://docs.github.com/en/copilot)
