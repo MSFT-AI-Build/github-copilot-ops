@@ -225,6 +225,12 @@ GitHub Copilot Business/Enterprise 플랜에는 **IP Indemnity**가 포함됩니
 | 팀/개인 | 시트 할당/해제로 접근 관리 |
 | 저장소/파일 | Content Exclusion 규칙으로 특정 컨텐츠 제외 |
 
+보안 사고의 우려가 있는 경우, 즉각적으로 대응 가능한 엔터프라이즈 레벨의 Kill Switch 를 확인할 수도 있습니다.
+
+![GHCP_Kill_Switch](../images/GHCP_KillSwitch.png)
+
+GitHub Enterprise Settings 에서 해당 메뉴를 확인하실 수 있습니다.
+
 ### Q24. MFA/SSO 인증을 필수로 적용할 수 있나요?
 
 **예.** Enterprise 환경에서는 MFA 또는 SSO 를 필수 구성으로 적용할 수 있습니다:
@@ -247,7 +253,9 @@ Enterprise 정책을 통해 확장 프로그램과 에이전트 기능을 제어
 
 ### Q26. 인시던트 발생 시 대응 절차는?
 
-1. **즉시 대응**: Enterprise 설정에서 Copilot 전체 비활성화 가능
+GitHub Copilot 의 경우 보안 사고 방지를 위한 다양한 계층을 제공합니다. 해당 기능을 숙지하신 뒤 Runbook 을 만들어 Production 환경에서 대응책을 설계하시기를 권장드립니다.
+
+1. **즉시 대응**: Enterprise 설정에서 Copilot 전체 비활성화 가능 (Q23 항목 참고)
 2. **조사**: Audit Log를 통해 이벤트 추적
 3. **보고**: GitHub 지원팀에 보안 인시던트 리포트
 4. **복구**: Content Exclusion 규칙 추가 후 서비스 재개
