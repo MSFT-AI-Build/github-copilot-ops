@@ -46,10 +46,10 @@ GitHub Copilot 은 라이센스 및 사용량에 따른 비용 체계를 제공�
 | **Copilot Extensions** | ✅ | ✅ |
 | **Custom Instructions** | ✅ | ✅ |
 | **Copilot Spaces** | ✅ | ✅ |
-| **코드베이스 인덱싱 (Semantic Code Search)** | ✅ | ✅ (더 많은 관리 옵션) |
+| **코드베이스 인덱싱 (Semantic Code Search)** | ✅ | ✅ (무제한 인덱싱) |
 | **IP 면책 (IP Indemnity)** | ✅ | ✅ |
 | **콘텐츠 제외 (Content Exclusion)** | ✅ | ✅ |
-| **관리자 정책 제어** | ✅ (Organization 수준) | ✅ (Enterprise 수준 + 고급 정책) |
+| **관리자 정책 제어** | ✅ | ✅ |
 | **Audit Log 통합** | ✅ | ✅ |
 | **Copilot Metrics API** | ✅ | ✅ |
 | **SAML SSO / SCIM** | ✅ | ✅ |
