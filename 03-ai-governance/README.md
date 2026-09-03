@@ -141,7 +141,7 @@ Phase 3: 지속적 운영
 
 ![GHCP_Policy_Partner](../images/GHCP_Policy_Partner.png)
 
-4. VS Code 를 통해 파트너 클라이언트 사용을 테스트합니다.
+4. VS Code 또는 Cloud 환경에서 @claude 를 입력해서 파트너 클라이언트 사용을 테스트해봅니다. (활성화에는 수 분 정도가 소요될 수 있습니다)
 
 
 ---
@@ -170,6 +170,8 @@ Phase 3: 지속적 운영
 | 규제 대상 데이터 | `**/pii/**`, `**/hipaa/**` | 컴플라이언스 준수 |
 | 레거시 코드 | `**/deprecated/**` | 비권장 패턴 학습 방지 |
 | 벤더 코드 | `**/vendor/**`, `**/third-party/**` | 라이선스 충돌 방지 |
+
+경로는 Repository 마다 다를 가능성이 높습니다. Content Exclusion 은 Repository 단위로도 구성이 가능하기 때문에, Repository 오너를 통해 저장소별 정책을 정의하시는 것이 현실적인 방안이 될 수 있습니다.
 
 > ⚠️ **제한 사항**: Content Exclusion은 심볼릭 링크 및 원격 파일시스템의 리포지토리에는 적용되지 않습니다. 또한 일부 Copilot Chat 모드 및 에디터에서는 exclusion 설정이 완전히 반영되지 않을 수 있으므로, 프로젝트마다 적용 범위를 확인하세요.
 
@@ -201,7 +203,10 @@ Week 9+:   지속적 최적화 → 사용량 분석 기반 정책 개선
 
 ### 6. 시트 관리 및 비용 최적화
 
-- **비활성 시트 정책**: GitHub에는 내장된 자동 회수 기능이 없으므로, GitHub API + GitHub Actions 워크플로우를 활용하여 일정 기간(예: 25~30일) 미사용 시트를 자동 회수하는 자동화를 구축합니다.
+- **비활성 시트 정책**: GitHub에는 내장된 자동 회수 기능이 없으므로, GitHub API + GitHub Actions 워크플로우를 활용하여 일정 기간(예: 25~30일) 미사용 시트를 자동 회수하는 자동화를 구축합니다. 혹은 다음과 같이 Enterprise > Licensing 메뉴에서 Activity Report 를 다운받아서 직접 처리하실 수 있습니다.
+
+![GHCP_Inactive](../images/GHCP_Inactive.png)
+
 - **사용량 대시보드**: Organization별 활성 사용자 수와 활용도를 주기적으로 모니터링합니다.
 - **온보딩/오프보딩 연동**: HR 시스템과 연계하여 입퇴사 시 자동으로 시트를 할당/회수합니다.
 - **알림 프로세스**: 시트 회수 전 사용자에게 사전 알림(이메일/Slack)을 발송하여 재활성화 기회를 제공합니다.
